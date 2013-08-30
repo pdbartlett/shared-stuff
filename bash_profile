@@ -20,6 +20,7 @@ function md() {
 export EDITOR=vim
 alias edd="$EDITOR"
 alias edrc="$EDITOR ~/.bash_profile && . ~/.bash_profile"
+alias edcrc="$EDITOR ~/conf/bash_profile && . ~/.bash_profile"
 alias rebash='. ~/.bash_profile'
 
 # Homebrew
@@ -42,25 +43,26 @@ function mex() {
   while [ -n "$*" ]
   do
     case $1 in
-      all)     _mex_rebuildall ;;
       build)   $bem build $clean $verbose ;;
       clean)   clean='--clean' ;;
       deploy)  $bem deploy ;;
-      run)     dev_appserver.py gae ;;
+      gae)     dev_appserver.py gae ;;
+      install) bundle install ;;
+      server)  $bem server ;;
       verbose) verbose='--verbose' ;;
       *)       echo "Unrecognized command: $1"; return ;;
     esac
     shift
   done
 }
-function _mex_rebuildall() {
+function mexall() {
   local orig=$CWD
   cd ~/src/web
   for p in *
   do
-    echo "Rebuilding $p"
+    echo "*** Processing $p ***"
     cd $p
-    mex clean build
+    mex "$@"
     cd ..
   done
   cd $orig
