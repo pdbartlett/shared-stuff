@@ -23,6 +23,9 @@ alias edrc="$EDITOR ~/.bash_profile && . ~/.bash_profile"
 alias edcrc="$EDITOR ~/conf/bash_profile && . ~/.bash_profile"
 alias rebash='. ~/.bash_profile'
 
+# Git
+alias g='git'
+
 # Homebrew
 PATH=/usr/local/sbin:/usr/local/bin:$PATH
 function chorme() {
