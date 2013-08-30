@@ -90,7 +90,6 @@ function utd() {
   rvm-check
   echo; echo '** Ruby Gems'
   gem update
-  cd - >/dev/null 2>&1
 }
 
 ### Added by RVM
