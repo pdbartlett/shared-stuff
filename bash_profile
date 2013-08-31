@@ -24,7 +24,16 @@ alias edcrc="$EDITOR ~/conf/bash_profile && . ~/.bash_profile"
 alias rebash='. ~/.bash_profile'
 
 # Git
-alias g='git'
+function g() {
+  case $1 in
+    pullall)
+      local orig=$CWD
+      cd $HOME/conf; g pull
+      cd $HOME/src;  g pull
+      cd $orig ;;
+    *) git "$@" ;;
+  esac
+}
 
 # Homebrew
 PATH=/usr/local/sbin:/usr/local/bin:$PATH
@@ -46,6 +55,7 @@ function mex() {
   while [ -n "$*" ]
   do
     case $1 in
+      all)     shift; _mex_all "$@"; shift 99 ;;
       build)   $bem build $clean $verbose ;;
       clean)   clean='--clean' ;;
       deploy)  $bem deploy ;;
@@ -58,7 +68,7 @@ function mex() {
     shift
   done
 }
-function mexall() {
+function _mex_all() {
   local orig=$CWD
   cd ~/src/web
   for p in *
@@ -89,7 +99,9 @@ alias kojo='nohup /Applications/Kojo2/bin/kojo >/dev/null 2>&1 &'
 
 # Combined
 function utd() {
-  echo '** Homebrew'
+  echo '** Github'
+  g pullall
+  echo; echo '** Homebrew'
   buu
   echo; echo '** RVM'
   rvm-check
