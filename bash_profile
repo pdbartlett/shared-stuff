@@ -99,7 +99,7 @@ alias kojo='nohup /Applications/Kojo2/bin/kojo >/dev/null 2>&1 &'
 
 # Combined
 function utd() {
-  if [[ "$1"=="-g" ]]; then
+  if [[ "$1" == "-g" ]]; then
     echo '** Github'
     g pullall
     echo
