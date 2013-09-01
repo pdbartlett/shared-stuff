@@ -99,14 +99,14 @@ alias kojo='nohup /Applications/Kojo2/bin/kojo >/dev/null 2>&1 &'
 
 # Combined
 function utd() {
-  echo '** Github'
-  g pullall
-  echo; echo '** Homebrew'
-  buu
-  echo; echo '** RVM'
-  rvm-check
-  echo; echo '** Ruby Gems'
-  gem update
+  if [[ "$1"=="-g" ]]; then
+    echo '** Github'
+    g pullall
+    echo
+  fi
+  echo '** Homebrew'; buu
+  echo; echo '** RVM'; rvm-check
+  echo; echo '** Ruby Gems'; gem update
 }
 
 ### Added by RVM
