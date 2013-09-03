@@ -94,7 +94,7 @@ function utd() {
   echo; echo '** RVM'
   rvm-check
   echo; echo '** Ruby Gems'
-  gem update
+  sudo gem update
 }
 
 ### Added by RVM
