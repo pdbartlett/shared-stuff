@@ -15,6 +15,8 @@ alias la='ls -alhF'
 function md() {
   mkdir $1 && cd $1
 }
+alias popd='popd >/dev/null'
+alias pushd='pushd >/dev/null'
 
 # Editing
 export EDITOR=vim
@@ -27,10 +29,10 @@ alias rebash='. ~/.bash_profile'
 function g() {
   case $1 in
     pullall)
-      local orig=$CWD
-      cd $HOME/conf; g pull
-      cd $HOME/src;  g pull
-      cd $orig ;;
+      pushd $HOME
+      echo "conf..."; cd conf; g pull
+      echo "src..."; cd ../src;  g pull
+      popd ;;
     *) git "$@" ;;
   esac
 }
@@ -69,8 +71,7 @@ function mex() {
   done
 }
 function _mex_all() {
-  local orig=$CWD
-  cd ~/src/web
+  pushd ~/src/web
   for p in *
   do
     echo "*** Processing $p ***"
@@ -78,7 +79,7 @@ function _mex_all() {
     mex "$@"
     cd ..
   done
-  cd $orig
+  popd
 }
 
 # RVM
