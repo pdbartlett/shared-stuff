@@ -29,6 +29,9 @@ alias edrc="$EDITOR ~/.bash_profile && . ~/.bash_profile"
 alias edcrc="$EDITOR ~/conf/bash_profile && . ~/.bash_profile"
 alias rebash='. ~/.bash_profile'
 
+# Clojure
+PATH="${PATH}:${HOME}/.cljr/bin"
+
 # Git
 function g() {
   case $1 in
@@ -42,7 +45,7 @@ function g() {
 }
 
 # Homebrew
-PATH=/usr/local/sbin:/usr/local/bin:$PATH
+PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 function chorme() {
   if [[ ! -w /usr/local ]] ; then sudo chown -R pdbartlett /usr/local; fi
 } 
@@ -118,4 +121,4 @@ function utd() {
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 # Tidy up path
-PATH=$(echo "$PATH" | awk -v RS=':' -v ORS=":" '!a[$1]++')
+PATH=$(printf "%s" "${PATH}" | /usr/bin/awk -v RS=: -v ORS=: '!($0 in a) {a[$0]; print}')
