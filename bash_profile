@@ -79,8 +79,9 @@ function mex() {
 }
 function _mex_all() {
   qpushd ~/src/web
-  for p in *
+  for f in */Gemfile
   do
+    local p=$(dirname $f)
     echo "*** Processing $p ***"
     cd $p
     mex "$@"
