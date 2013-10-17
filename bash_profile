@@ -61,10 +61,10 @@ function mex() {
   local bem='bundle exec middleman'
   local clean=''
   local verbose=''
-  while [ -n "$*" ]
+  while [ -n "$1" ]
   do
     case $1 in
-      all)     shift; _mex_all "$@"; shift 99 ;;
+      all)     shift; _mex_all "$@"; return ;;
       build)   $bem build $clean $verbose ;;
       clean)   clean='--clean' ;;
       deploy)  $bem deploy ;;
@@ -78,6 +78,7 @@ function mex() {
   done
 }
 function _mex_all() {
+  if [ -z "$1" ]; then echo "No command specified to 'mex all'"; return; fi
   qpushd ~/src/web
   for f in */Gemfile
   do
