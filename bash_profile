@@ -58,24 +58,30 @@ function buu() {
 
 # Middleman
 function mex() {
+  local action=''
   local bem='bundle exec middleman'
-  local clean=''
-  local verbose=''
+  local bemflags=''
+  local post=''
   while [ -n "$1" ]
   do
     case $1 in
+      # Custom
       all)     shift; _mex_all "$@"; return ;;
-      build)   $bem build $clean $verbose ;;
-      clean)   clean='--clean' ;;
-      deploy)  $bem deploy ;;
-      gae)     dev_appserver.py gae ;;
+      clean)   bemflags="$bemflags --clean" ;;
+      deploy)  post="$bem deploy" ;;
+      gae)     post='dev_appserver.py gae' ;;
       install) bundle install ;;
-      server)  $bem server ;;
-      verbose) verbose='--verbose' ;;
-      *)       echo "Unrecognized command: $1"; return ;;
+      server)  post="$bem server" ;;
+      verbose) bemflags="$bemflags --verbose" ;;
+      # Pass through to BEM
+      build) action=$1 ;;
+      # Unknown
+      *) echo "Action $1 is not recognised"; return ;;
     esac
     shift
   done
+  if [ -n "$action" ]; then $bem $action $bemflags; fi
+  if [ -n "$post" ]; then $post; fi
 }
 function _mex_all() {
   if [ -z "$1" ]; then echo "No command specified to 'mex all'"; return; fi
