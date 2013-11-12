@@ -80,7 +80,7 @@ function mex() {
     esac
     shift
   done
-  if [ -n "$action" ]; then $bem $action $bemflags; fi
+  if [ -n "$action" ]; then $bem $action $bemflags || return; fi
   if [ -n "$post" ]; then $post; fi
 }
 function _mex_all() {
