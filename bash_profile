@@ -29,8 +29,8 @@ alias edrc="$EDITOR ~/.bash_profile && . ~/.bash_profile"
 alias edcrc="$EDITOR ~/conf/bash_profile && . ~/.bash_profile"
 alias rebash='. ~/.bash_profile'
 
-# Clojure
-PATH="${PATH}:${HOME}/.cljr/bin"
+# User bin, Greenfoot and Clojure
+PATH="${PATH}:${HOME}/bin:${HOME}/bin/greenfoot:${HOME}/.cljr/bin"
 
 # Git
 function g() {
