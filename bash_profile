@@ -115,6 +115,7 @@ alias kojo='nohup /Applications/Kojo2/bin/kojo >/dev/null 2>&1 &'
 
 # Combined
 function utd() {
+  sudo -v
   if [[ "$1" == "-g" ]]; then
     echo '** Github'
     g pullall
