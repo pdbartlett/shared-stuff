@@ -47,6 +47,7 @@ function g() {
 # Homebrew
 PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 function chorme() {
+  if [[ ! -d /usr/local ]] ; then return 1; fi
   if [[ ! -w /usr/local ]] ; then sudo chown -R pdbartlett /usr/local; fi
 } 
 alias bh='brew home'
@@ -97,6 +98,9 @@ function _mex_all() {
   qpopd
 }
 
+# R
+alias rr='cd ~/rtmp; r; cd - >/dev/null'
+
 # RVM
 function rvm-check() {
   local stable=https://raw.github.com/wayneeseguin/rvm/master/VERSION
@@ -121,9 +125,18 @@ function utd() {
     g pullall
     echo
   fi
-  echo '** Homebrew'; buu
-  echo; echo '** RVM'; rvm-check
-  echo; echo '** Ruby Gems'; sudo gem update
+  if which brew >/dev/null; then
+    echo '** Homebrew'
+    buu
+  fi
+  if which rvm >/dev/null; then
+    echo; echo '** RVM'
+    rvm-check
+  fi
+  if which gem >/dev/null; then
+    echo; echo '** Ruby Gems'
+    sudo gem update
+  fi
 }
 
 ### Added by RVM
