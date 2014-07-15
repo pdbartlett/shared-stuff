@@ -32,6 +32,19 @@ alias rebash='. ~/.bash_profile'
 # User bin, Greenfoot and Clojure
 PATH="${PATH}:${HOME}/bin:${HOME}/bin/greenfoot:${HOME}/.cljr/bin"
 
+# ABC/M4
+function a4() {
+  local stem=${1%\.abc4}
+  local temp=${stem}_gen.abc
+  m4 ${stem}.abc4 >$temp
+  local suffix=${2:-mid}
+  case $suffix in
+    mid) abc2midi $temp -o ${stem}.mid ;;
+    pdf) abcm2ps  $temp -O - | ps2pdf -sPAPERSIZE=a4 - > ${stem}.pdf ;;
+    ps)  abcm2ps  $temp -O ${stem}.ps ;;
+  esac
+}
+
 # Git
 function g() {
   case $1 in
