@@ -112,7 +112,7 @@ function _mex_all() {
 }
 
 # R
-alias rr='cd ~/rtmp; r; cd - >/dev/null'
+alias rr='cd ~/rtmp; r --no-save; cd - >/dev/null'
 
 # RVM
 function rvm-check() {
