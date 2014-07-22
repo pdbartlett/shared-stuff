@@ -21,6 +21,9 @@ function qpopd() {
 function qpushd() {
   pushd "$@" >/dev/null
 }
+function witch() {
+  ls -lhF $(which $1)
+}
 
 # Editing
 export EDITOR=vim
