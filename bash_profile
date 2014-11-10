@@ -1,3 +1,6 @@
+# Get aliases to a known, clean state before we start
+unalias -a
+
 # Set shell prompt to something pretty if terminal supports it
 function updatePrompt {
   if [ "$TERM" == "dumb" ]; then
@@ -21,8 +24,12 @@ function qpopd() {
 function qpushd() {
   pushd "$@" >/dev/null
 }
-function witch() {
-  ls -lhF $(which $1)
+function which() {
+  if [ "$1" == "-s" ]; then
+    /usr/bin/which "$@"
+  else
+    ls -lhF $(/usr/bin/which "$@")
+  fi
 }
 
 # Editing
