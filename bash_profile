@@ -148,15 +148,15 @@ function utd() {
     g pullall
     echo
   fi
-  if which brew >/dev/null; then
+  if which -s brew; then
     echo '** Homebrew'
     buu
   fi
-  if which rvm >/dev/null; then
+  if which -s rvm; then
     echo; echo '** RVM'
     rvm-check
   fi
-  if which gem >/dev/null; then
+  if which -s gem; then
     echo; echo '** Ruby Gems'
     sudo gem update
   fi
