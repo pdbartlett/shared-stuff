@@ -68,7 +68,7 @@ function g() {
 }
 
 # Homebrew
-PATH="/usr/local/sbin:/usr/local/bin:$PATH"
+PATH="$PATH:/usr/local/sbin:/usr/local/bin"
 function chorme() {
   if [[ ! -d /usr/local ]] ; then return 1; fi
   if [[ ! -w /usr/local ]] ; then sudo chown -R pdbartlett /usr/local; fi
@@ -125,8 +125,10 @@ function _mex_all() {
 alias rr='cd ~/rtmp; r --no-save; cd - >/dev/null'
 
 # RVM
+PATH="$PATH:$HOME/.rvm/bin"
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 function rvm-check() {
-  local stable=https://raw.github.com/wayneeseguin/rvm/master/VERSION
+  local stable=https://raw.githubusercontent.com/wayneeseguin/rvm/master/VERSION
   local installed=/Users/pdbartlett/.rvm/VERSION
   if ( curl $stable | diff $installed - ); then
     echo "Already up-to-date."
@@ -136,7 +138,7 @@ function rvm-check() {
   more $installed
 }
 
-# Scala / SBT
+# Scala, etc.
 export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'
 alias kojo='nohup /Applications/Kojo2/bin/kojo >/dev/null 2>&1 &'
 
@@ -158,12 +160,13 @@ function utd() {
   fi
   if which -s gem; then
     echo; echo '** Ruby Gems'
-    sudo gem update
+    if which -s rvm; then
+       gem update
+    else
+       sudo gem update
+    fi
   fi
 }
-
-### Added by RVM
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 # Tidy up path
 PATH=$(printf "%s" "${PATH}" | /usr/bin/awk -v RS=: -v ORS=: '!($0 in a) {a[$0]; print}')
