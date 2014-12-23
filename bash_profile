@@ -24,12 +24,8 @@ function qpopd() {
 function qpushd() {
   pushd "$@" >/dev/null
 }
-function which() {
-  if [ "$1" == "-s" ]; then
-    /usr/bin/which "$@"
-  else
-    ls -lhF $(/usr/bin/which "$@")
-  fi
+function witch() {
+  ls -lhF $(/usr/bin/which "$@")
 }
 
 # Editing
@@ -130,7 +126,7 @@ PATH="$PATH:$HOME/.rvm/bin"
 function rvm-check() {
   local stable=https://raw.githubusercontent.com/wayneeseguin/rvm/master/VERSION
   local installed=/Users/pdbartlett/.rvm/VERSION
-  if ( curl $stable | diff $installed - ); then
+  if ( curl -s $stable | diff $installed - ); then
     echo "Already up-to-date."
   else
     rvm get stable
