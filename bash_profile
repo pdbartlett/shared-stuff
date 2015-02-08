@@ -1,3 +1,5 @@
+# .bash(rc|_profile) extract for common setup.
+
 # Get aliases to a known, clean state before we start
 unalias -a
 
@@ -25,7 +27,7 @@ function qpushd() {
   pushd "$@" >/dev/null
 }
 function witch() {
-  ls -lhF $(/usr/bin/which "$@")
+  if which -s $1; then ls -lhF $(which $1); fi
 }
 
 # Editing
@@ -64,8 +66,13 @@ function g() {
 }
 
 # Homebrew
-PATH="$PATH:/usr/local/sbin:/usr/local/bin"
+if [[ -d "$HOME/homebrew" ]]; then
+  PATH="$PATH:$HOME/homebrew/bin"
+else
+  PATH="$PATH:/usr/local/sbin:/usr/local/bin"
+fi
 function chorme() {
+  if [[ -d "$HOME/homebrew" ]] ; then return 0; fi
   if [[ ! -d /usr/local ]] ; then return 1; fi
   if [[ ! -w /usr/local ]] ; then sudo chown -R pdbartlett /usr/local; fi
 } 
@@ -78,8 +85,9 @@ function buu() {
 
 # Middleman
 function mex() {
-  local action=''
   local bem='bundle exec middleman'
+  if [ -z "$1" ]; then $bem; return; fi
+  local action=''
   local bemflags=''
   local post=''
   while [ -n "$1" ]
