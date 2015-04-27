@@ -80,7 +80,7 @@ alias bh='brew home'
 alias bi='chorme && brew install'
 alias bs='brew search'
 function buu() {
-  chorme && brew update && echo '---' && brew outdated && brew upgrade
+  chorme && brew update && echo '---' && brew outdated && brew upgrade --all
 }
 
 # Middleman
