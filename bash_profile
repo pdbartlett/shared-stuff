@@ -37,19 +37,21 @@ alias edrc="$EDITOR ~/.bash_profile && . ~/.bash_profile"
 alias edcrc="$EDITOR ~/conf/bash_profile && . ~/.bash_profile"
 alias rebash='. ~/.bash_profile'
 
-# User bin, Greenfoot and Clojure
-PATH="${PATH}:${HOME}/bin:${HOME}/bin/greenfoot:${HOME}/.cljr/bin"
-
 # ABC/M4
 function a4() {
   local stem=${1%\.abc4}
   local temp=${stem}_gen.abc
   m4 ${stem}.abc4 >$temp
+  abc $temp ${2:-mid}
+}
+
+function abc() {
+  local stem=${1%\.abc}
   local suffix=${2:-mid}
   case $suffix in
-    mid) abc2midi $temp -o ${stem}.mid ;;
-    pdf) abcm2ps  $temp -O - | ps2pdf -sPAPERSIZE=a4 - > ${stem}.pdf ;;
-    ps)  abcm2ps  $temp -O ${stem}.ps ;;
+    mid) abc2midi $1 -o ${stem}.mid ;;
+    pdf) abcm2ps  $1 -O - | ps2pdf -sPAPERSIZE=a4 - > ${stem}.pdf ;;
+    ps)  abcm2ps  $1 -O ${stem}.ps ;;
   esac
 }
 
@@ -71,16 +73,11 @@ if [[ -d "$HOME/homebrew" ]]; then
 else
   PATH="$PATH:/usr/local/sbin:/usr/local/bin"
 fi
-function chorme() {
-  if [[ -d "$HOME/homebrew" ]] ; then return 0; fi
-  if [[ ! -d /usr/local ]] ; then return 1; fi
-  if [[ ! -w /usr/local ]] ; then sudo chown -R pdbartlett /usr/local; fi
-} 
 alias bh='brew home'
-alias bi='chorme && brew install'
+alias bi='brew install'
 alias bs='brew search'
 function buu() {
-  chorme && brew update && echo '---' && brew outdated && brew upgrade --all
+  brew update && echo '---' && brew outdated && brew upgrade --all && brew cleanup
 }
 
 # Middleman
@@ -125,22 +122,21 @@ function _mex_all() {
   qpopd
 }
 
-# R
-alias rr='cd ~/rtmp; r --no-save; cd - >/dev/null'
-
 # RVM
-PATH="$PATH:$HOME/.rvm/bin"
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
-function rvm-check() {
-  local stable=https://raw.githubusercontent.com/wayneeseguin/rvm/master/VERSION
-  local installed=/Users/pdbartlett/.rvm/VERSION
-  if ( curl -s $stable | diff $installed - ); then
-    echo "Already up-to-date."
-  else
-    rvm get stable
-  fi
-  more $installed
-}
+if [[ -d $HOME/.rvm ]]; then
+  PATH="$PATH:$HOME/.rvm/bin"
+  [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+  function rvm-check() {
+    local stable=https://raw.githubusercontent.com/wayneeseguin/rvm/master/VERSION
+    local installed=/Users/pdbartlett/.rvm/VERSION
+    if ( curl -s $stable | diff $installed - ); then
+      echo "Already up-to-date."
+    else
+      rvm get stable
+    fi
+    more $installed
+  }
+fi
 
 # Scala, etc.
 export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'
@@ -169,6 +165,10 @@ function utd() {
     else
        sudo gem update
     fi
+  fi
+  if which -s r; then
+    echo; echo '** R Packages'
+    echo "update.packages()" | r --no-save
   fi
 }
 
