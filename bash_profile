@@ -37,23 +37,27 @@ alias edrc="$EDITOR ~/.bash_profile && . ~/.bash_profile"
 alias edcrc="$EDITOR ~/conf/bash_profile && . ~/.bash_profile"
 alias rebash='. ~/.bash_profile'
 
-# ABC/M4
-function a4() {
-  local stem=${1%\.abc4}
-  local temp=${stem}_gen.abc
-  m4 ${stem}.abc4 >$temp
-  abc $temp ${2:-mid}
-}
+# ABC
+if which -s abc2midi; then
+  if which -s m4; then
+    function a4() {
+      local stem=${1%\.abc4}
+      local temp=${stem}_gen.abc
+      m4 ${stem}.abc4 >$temp
+      abc $temp ${2:-mid}
+    }
+  fi
 
-function abc() {
-  local stem=${1%\.abc}
-  local suffix=${2:-mid}
-  case $suffix in
-    mid) abc2midi $1 -o ${stem}.mid ;;
-    pdf) abcm2ps  $1 -O - | ps2pdf -sPAPERSIZE=a4 - > ${stem}.pdf ;;
-    ps)  abcm2ps  $1 -O ${stem}.ps ;;
-  esac
-}
+  function abc() {
+    local stem=${1%\.abc}
+    local suffix=${2:-mid}
+    case $suffix in
+      mid) abc2midi $1 -o ${stem}.mid ;;
+      pdf) abcm2ps  $1 -O - | ps2pdf -sPAPERSIZE=a4 - > ${stem}.pdf ;;
+      ps)  abcm2ps  $1 -O ${stem}.ps ;;
+    esac
+  }
+fi
 
 # Git
 function g() {
@@ -68,59 +72,19 @@ function g() {
 }
 
 # Homebrew
-if [[ -d "$HOME/homebrew" ]]; then
-  PATH="$PATH:$HOME/homebrew/bin"
-else
-  PATH="$PATH:/usr/local/sbin:/usr/local/bin"
+if which -s brew; then
+  if [[ -d "$HOME/homebrew" ]]; then
+    PATH="$PATH:$HOME/homebrew/bin"
+  else
+    PATH="$PATH:/usr/local/sbin:/usr/local/bin"
+  fi
+  alias bh='brew home'
+  alias bi='brew install'
+  alias bs='brew search'
+  function buu() {
+    brew update && echo '---' && brew outdated && brew upgrade --all && brew cleanup
+  }
 fi
-alias bh='brew home'
-alias bi='brew install'
-alias bs='brew search'
-function buu() {
-  brew update && echo '---' && brew outdated && brew upgrade --all && brew cleanup
-}
-
-# Middleman
-function mex() {
-  local bem='bundle exec middleman'
-  if [ -z "$1" ]; then $bem; return; fi
-  local action=''
-  local bemflags=''
-  local post=''
-  while [ -n "$1" ]
-  do
-    case $1 in
-      # Custom
-      all)     shift; _mex_all "$@"; return ;;
-      clean)   bemflags="$bemflags --clean" ;;
-      deploy)  post="$bem deploy" ;;
-      gae)     post='dev_appserver.py gae' ;;
-      install) bundle install ;;
-      server)  post="$bem server" ;;
-      verbose) bemflags="$bemflags --verbose" ;;
-      # Pass through to BEM
-      build) action=$1 ;;
-      # Unknown
-      *) echo "Action $1 is not recognised"; return ;;
-    esac
-    shift
-  done
-  if [ -n "$action" ]; then $bem $action $bemflags || return; fi
-  if [ -n "$post" ]; then $post; fi
-}
-function _mex_all() {
-  if [ -z "$1" ]; then echo "No command specified to 'mex all'"; return; fi
-  qpushd ~/src/web
-  for f in */Gemfile
-  do
-    local p=$(dirname $f)
-    echo "*** Processing $p ***"
-    cd $p
-    mex "$@"
-    cd ..
-  done
-  qpopd
-}
 
 # RVM
 if [[ -d $HOME/.rvm ]]; then
@@ -138,9 +102,8 @@ if [[ -d $HOME/.rvm ]]; then
   }
 fi
 
-# Scala, etc.
-export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'
-alias kojo='nohup /Applications/Kojo2/bin/kojo >/dev/null 2>&1 &'
+# Scala
+if which -s scala; then export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'; fi
 
 # Combined
 function utd() {
