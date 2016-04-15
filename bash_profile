@@ -111,11 +111,6 @@ if which -s scala; then export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'; fi
 # Utilities
 function utd() {
   sudo -v
-  if [[ "$1" == "-g" ]]; then
-    echo '** Github'
-    g pullall
-    echo
-  fi
   if which -s brew; then
     echo '** Homebrew'
     buu
@@ -131,10 +126,6 @@ function utd() {
     else
        sudo gem update
     fi
-  fi
-  if which -s r; then
-    echo; echo '** R Packages'
-    echo "update.packages()" | r --no-save
   fi
 }
 
