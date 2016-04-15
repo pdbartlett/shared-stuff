@@ -37,6 +37,24 @@ alias edrc="$EDITOR ~/.bash_profile && . ~/.bash_profile"
 alias edcrc="$EDITOR ~/conf/bash_profile && . ~/.bash_profile"
 alias rebash='. ~/.bash_profile'
 
+# Homebrew (should be first)
+if [[ -d "$HOME/homebrew" ]]; then
+  PATH="$PATH:$HOME/homebrew/bin"
+else
+  PATH="$PATH:/usr/local/sbin:/usr/local/bin"
+fi
+if which -s brew; then
+  alias bh='brew home'
+  alias bi='brew install'
+  alias bs='brew search'
+  function buu() {
+    brew update && echo '---' && brew outdated && brew upgrade --all && brew cleanup
+  }
+  if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+  fi
+fi
+
 # ABC
 if which -s abc2midi; then
   if which -s m4; then
@@ -59,31 +77,16 @@ if which -s abc2midi; then
   }
 fi
 
-# Git
-function g() {
-  case $1 in
-    pullall)
-      qpushd $HOME
-      echo "conf..."; cd conf; g pull
-      echo "src..."; cd ../src;  g pull
-      qpopd ;;
-    *) git "$@" ;;
-  esac
-}
+# Bazel
+if which -s bazel; then
+  alias blaze='bazel'
+  BLAZE_COMP=$(complete -p bazel | sed 's/bazel$/blaze/g') && $BLAZE_COMP
+fi
 
-# Homebrew
-if which -s brew; then
-  if [[ -d "$HOME/homebrew" ]]; then
-    PATH="$PATH:$HOME/homebrew/bin"
-  else
-    PATH="$PATH:/usr/local/sbin:/usr/local/bin"
-  fi
-  alias bh='brew home'
-  alias bi='brew install'
-  alias bs='brew search'
-  function buu() {
-    brew update && echo '---' && brew outdated && brew upgrade --all && brew cleanup
-  }
+# Git
+if which -s git; then
+  alias g='git'
+  G_COMP=$(complete -p git | sed 's/git$/g/g') && $G_COMP
 fi
 
 # RVM
@@ -105,7 +108,7 @@ fi
 # Scala
 if which -s scala; then export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'; fi
 
-# Combined
+# Utilities
 function utd() {
   sudo -v
   if [[ "$1" == "-g" ]]; then
