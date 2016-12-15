@@ -48,7 +48,7 @@ if which -s brew; then
   alias bi='brew install'
   alias bs='brew search'
   function buu() {
-    brew update && echo '---' && brew outdated && brew upgrade --all && brew cleanup
+    brew update && echo '---' && brew outdated && brew upgrade && brew cleanup
   }
   if [ -f $(brew --prefix)/etc/bash_completion ]; then
     . $(brew --prefix)/etc/bash_completion
