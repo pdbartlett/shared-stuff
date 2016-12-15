@@ -80,13 +80,17 @@ fi
 # Bazel
 if which -s bazel; then
   alias blaze='bazel'
-  BLAZE_COMP=$(complete -p bazel | sed 's/bazel$/blaze/g') && $BLAZE_COMP
+  if complete -p bazel 2>/dev/null; then
+    BLAZE_COMP=$(complete -p bazel | sed 's/bazel$/blaze/g') && $BLAZE_COMP
+  fi
 fi
 
 # Git
 if which -s git; then
   alias g='git'
-  G_COMP=$(complete -p git | sed 's/git$/g/g') && $G_COMP
+  if complete -p git 2>/dev/null; then
+    G_COMP=$(complete -p git | sed 's/git$/g/g') && $G_COMP
+  fi
 fi
 
 # RVM
@@ -128,6 +132,9 @@ function utd() {
     fi
   fi
 }
+
+# Switch to 'usual' Ruby/Gems
+rvm 2.2.4@webdev
 
 # Tidy up path
 PATH=$(printf "%s" "${PATH}" | /usr/bin/awk -v RS=: -v ORS=: '!($0 in a) {a[$0]; print}')
