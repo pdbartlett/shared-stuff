@@ -39,9 +39,9 @@ alias rebash='. ~/.bash_profile'
 
 # Homebrew (should be first)
 if [[ -d "$HOME/homebrew" ]]; then
-  PATH="$PATH:$HOME/homebrew/bin"
+  PATH="$HOME/homebrew/bin:$PATH"
 else
-  PATH="$PATH:/usr/local/sbin:/usr/local/bin"
+  PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 fi
 if which -s brew; then
   alias bh='brew home'
@@ -80,7 +80,7 @@ fi
 # Bazel
 if which -s bazel; then
   alias blaze='bazel'
-  if complete -p bazel 2>/dev/null; then
+  if complete -p bazel >/dev/null 2>&1; then
     BLAZE_COMP=$(complete -p bazel | sed 's/bazel$/blaze/g') && $BLAZE_COMP
   fi
 fi
@@ -88,7 +88,7 @@ fi
 # Git
 if which -s git; then
   alias g='git'
-  if complete -p git 2>/dev/null; then
+  if complete -p git >/dev/null 2>&1; then
     G_COMP=$(complete -p git | sed 's/git$/g/g') && $G_COMP
   fi
 fi
@@ -133,8 +133,8 @@ function utd() {
   fi
 }
 
-# Switch to 'usual' Ruby/Gems
-rvm 2.2.4@webdev
+# iterm2 shell integration
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
 # Tidy up path
 PATH=$(printf "%s" "${PATH}" | /usr/bin/awk -v RS=: -v ORS=: '!($0 in a) {a[$0]; print}')
