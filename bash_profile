@@ -95,7 +95,7 @@ fi
 
 # RVM
 if [[ -d $HOME/.rvm ]]; then
-  PATH="$PATH:$HOME/.rvm/bin"
+  PATH="$HOME/.rvm/bin:$PATH"
   [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
   function rvm-check() {
     local stable=https://raw.githubusercontent.com/wayneeseguin/rvm/master/VERSION
@@ -106,6 +106,10 @@ if [[ -d $HOME/.rvm ]]; then
       rvm get stable
     fi
     more $installed
+    echo '---'
+    rvm list known | grep '^\[ruby-\]'
+    echo '---'
+    rvm use
   }
 fi
 
@@ -138,3 +142,6 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 
 # Tidy up path
 PATH=$(printf "%s" "${PATH}" | /usr/bin/awk -v RS=: -v ORS=: '!($0 in a) {a[$0]; print}')
+
+# Keep RVM happy with PATH.
+rvm use 2.3.3 >/dev/null 2>&1
