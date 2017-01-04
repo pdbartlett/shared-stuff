@@ -106,8 +106,14 @@ if [[ -d $HOME/.rvm ]]; then
       rvm get stable
     fi
     more $installed
-    echo '---'
-    rvm list known | grep '^\[ruby-\]'
+    local oldrubies=/Users/pdbartlett/.rubies.old
+    local newrubies=/Users/pdbartlett/.rubies.new
+    rvm list known | grep '^\[ruby-\]' >$newrubies
+    if [[ -f $oldrubies ]]; then
+      echo '---'
+      diff -s $oldrubies $newrubies;
+    fi
+    mv -f $newrubies $oldrubies
     echo '---'
     rvm use
   }
