@@ -60,9 +60,9 @@ if which -s abc2midi; then
   if which -s m4; then
     function a4() {
       local stem=${1%\.abc4}
-      local temp=${stem}_gen.abc
-      m4 ${stem}.abc4 >$temp
-      abc $temp ${2:-mid}
+      local temp_abc=${stem}_gen.abc
+      m4 $1 >$temp_abc
+      abc $temp_abc ${2:-mid}
     }
   fi
 
