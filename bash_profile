@@ -132,14 +132,8 @@ function utd() {
   if which -s rvm; then
     echo; echo '** RVM'
     rvm-check
-  fi
-  if which -s gem; then
     echo; echo '** Ruby Gems'
-    if which -s rvm; then
-       gem update
-    else
-       sudo gem update
-    fi
+    gem update
   fi
 }
 
@@ -149,5 +143,7 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 # Tidy up path
 PATH=$(printf "%s" "${PATH}" | /usr/bin/awk -v RS=: -v ORS=: '!($0 in a) {a[$0]; print}')
 
-# Keep RVM happy with PATH.
-rvm use 2.3.3 >/dev/null 2>&1
+if which -s rvm; then
+  # Keep RVM happy with PATH.
+  rvm use 2.3.3 >/dev/null 2>&1
+fi
