@@ -1,0 +1,13 @@
+abcm2ps
+abcmidi
+bash
+bash-completion
+bazel
+coreutils
+fuse-emulator
+ghostscript
+git
+openssl@1.1
+pstree
+tmux
+vim
