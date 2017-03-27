@@ -4,10 +4,12 @@ bash
 bash-completion
 bazel
 coreutils
-fuse-emulator
 ghostscript
 git
 openssl@1.1
+perl
+python
 pstree
+ruby
 tmux
 vim

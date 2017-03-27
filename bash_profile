@@ -18,7 +18,7 @@ alias df='df -h'
 alias l='ls -lhF'
 alias la='ls -alhF'
 function md() {
-  mkdir $1 && cd $1
+  mkdir -p $1 && cd $1
 }
 function qpopd() {
   popd "$@" >/dev/null
