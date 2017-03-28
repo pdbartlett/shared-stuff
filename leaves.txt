@@ -8,8 +8,8 @@ ghostscript
 git
 openssl@1.1
 perl
-python
 pstree
+python
 ruby
 tmux
 vim
