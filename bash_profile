@@ -127,6 +127,9 @@ if [[ -d $HOME/.rvm ]]; then
   }
 fi
 
+# Go
+PATH="$PATH:$HOME/homebrew/opt/go/libexec/bin:$HOME/go/bin"
+
 # Scala
 if which -s scala; then export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'; fi
 
