@@ -4,9 +4,9 @@ bash
 bash-completion
 bazel
 coreutils
-go
 ghostscript
 git
+go
 openssl@1.1
 perl
 pstree
