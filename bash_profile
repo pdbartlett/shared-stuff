@@ -49,16 +49,9 @@ if which -s brew; then
   alias br='brew remove'
   alias bs='brew search'
   function buu() {
-    brew update && echo '---' && brew outdated && brew upgrade
-    brew leaves >"${HOME}/conf/leaves.txt.tmp"
-    if [[ -f "${HOME}/conf/leaves.txt" ]]; then
-      diff "${HOME}/conf/leaves.txt" "${HOME}/conf/leaves.txt.tmp" | grep '^[<>]'
-    else
-      mv "${HOME}/conf/leaves.txt.tmp" "${HOME}/conf/leaves.txt"
-    fi
-    brew cleanup
+    brew update && echo '---' && brew outdated && brew upgrade && brew cleanup
   }
-  if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  if [[ -f $(brew --prefix)/etc/bash_completion ]]; then
     . $(brew --prefix)/etc/bash_completion
   fi
 fi
