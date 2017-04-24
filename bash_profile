@@ -94,6 +94,11 @@ if which -s git; then
   fi
 fi
 
+# Rbenv
+if which -s rbenv; then
+  eval "$(rbenv init -)"
+fi
+
 # RVM
 if [[ -d $HOME/.rvm ]]; then
   PATH="$HOME/.rvm/bin:$PATH"
