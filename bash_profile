@@ -133,7 +133,15 @@ if which -s scala; then export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'; fi
 
 # Utilities
 function utd() {
-  sudo -v
+  local GEM_SUDO=sudo
+  if which -s rvm; then
+    GEM_SUDO=
+  elif which -s rbenv; then
+    GEM_SUDO=
+  else
+    sudo -v
+  fi
+
   if which -s brew; then
     echo '** Homebrew'
     buu
@@ -141,8 +149,10 @@ function utd() {
   if which -s rvm; then
     echo; echo '** RVM'
     rvm-check
+  fi
+  if which -s gem; then
     echo; echo '** Ruby Gems'
-    gem update
+    ${GEM_SUDO} gem update
   fi
 }
 
