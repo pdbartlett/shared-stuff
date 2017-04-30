@@ -99,32 +99,6 @@ if which -s rbenv; then
   eval "$(rbenv init -)"
 fi
 
-# RVM
-if [[ -d $HOME/.rvm ]]; then
-  PATH="$HOME/.rvm/bin:$PATH"
-  [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
-  function rvm-check() {
-    local stable=https://raw.githubusercontent.com/wayneeseguin/rvm/master/VERSION
-    local installed=/Users/pdbartlett/.rvm/VERSION
-    if ( curl -s $stable | diff $installed - ); then
-      echo "Already up-to-date."
-    else
-      rvm get stable
-    fi
-    more $installed
-    local oldrubies=/Users/pdbartlett/.rubies.old
-    local newrubies=/Users/pdbartlett/.rubies.new
-    rvm list known | grep '^\[ruby-\]' >$newrubies
-    if [[ -f $oldrubies ]]; then
-      echo '---'
-      diff -s $oldrubies $newrubies;
-    fi
-    mv -f $newrubies $oldrubies
-    echo '---'
-    rvm use
-  }
-fi
-
 # Go
 PATH="$PATH:$HOME/homebrew/opt/go/libexec/bin:$HOME/go/bin"
 
@@ -133,26 +107,9 @@ if which -s scala; then export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'; fi
 
 # Utilities
 function utd() {
-  local GEM_SUDO=sudo
-  if which -s rvm; then
-    GEM_SUDO=
-  elif which -s rbenv; then
-    GEM_SUDO=
-  else
-    sudo -v
-  fi
-
   if which -s brew; then
     echo '** Homebrew'
     buu
-  fi
-  if which -s rvm; then
-    echo; echo '** RVM'
-    rvm-check
-  fi
-  if which -s gem; then
-    echo; echo '** Ruby Gems'
-    ${GEM_SUDO} gem update
   fi
 }
 
@@ -161,8 +118,3 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 
 # Tidy up path
 PATH=$(printf "%s" "${PATH}" | /usr/bin/awk -v RS=: -v ORS=: '!($0 in a) {a[$0]; print}')
-
-if which -s rvm; then
-  # Keep RVM happy with PATH.
-  rvm use 2.3.3 >/dev/null 2>&1
-fi
