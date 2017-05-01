@@ -111,6 +111,17 @@ function utd() {
     echo '** Homebrew'
     buu
   fi
+  if which -s rbenv; then
+    echo '** rbenv'
+    local oldrubies=/Users/pdbartlett/.rubies.old
+    local newrubies=/Users/pdbartlett/.rubies.new
+    rbenv install --list | grep '^\s*[0-9]' >$newrubies
+    if [[ -f $oldrubies ]]; then
+      diff -s $oldrubies $newrubies;
+    fi
+    mv -f $newrubies $oldrubies
+    rbenv versions
+  fi
 }
 
 # iterm2 shell integration
