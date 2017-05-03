@@ -49,7 +49,7 @@ if which -s brew; then
   alias br='brew remove'
   alias bs='brew search'
   function buu() {
-    brew update && echo '---' && brew outdated && brew upgrade && brew cleanup
+    brew update && brew outdated && brew upgrade && brew cleanup
   }
   if [[ -f $(brew --prefix)/etc/bash_completion ]]; then
     . $(brew --prefix)/etc/bash_completion
@@ -108,11 +108,15 @@ if which -s scala; then export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'; fi
 # Utilities
 function utd() {
   if which -s brew; then
+    echo '***********'
     echo '** Homebrew'
+    echo '***********'
     buu
   fi
   if which -s rbenv; then
+    echo '********'
     echo '** rbenv'
+    echo '********'
     local oldrubies=/Users/pdbartlett/.rubies.old
     local newrubies=/Users/pdbartlett/.rubies.new
     rbenv install --list | grep '^\s*[0-9]' >$newrubies
@@ -120,6 +124,7 @@ function utd() {
       diff -s $oldrubies $newrubies;
     fi
     mv -f $newrubies $oldrubies
+    echo 'Installed:'
     rbenv versions
   fi
 }
