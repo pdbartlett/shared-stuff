@@ -1,11 +1,11 @@
-# .bash(rc|_profile) extract for common setup.
+# .bash_profile extract for common setup.
 
 # Get aliases to a known, clean state before we start
 unalias -a
 
 # Set shell prompt to something pretty if terminal supports it
 function updatePrompt {
-  if [ "$TERM" == "dumb" ]; then
+  if [[ "${TERM}" == "dumb" ]]; then
     export PS1="[local] \w \$ "
   else
     export PS1="\[\033[0;37m\][local] \[\033[0;36m\]\w\[\033[0m\] \$ "
@@ -13,35 +13,33 @@ function updatePrompt {
 }
 export PROMPT_COMMAND=updatePrompt
 
+# Editing
+export EDITOR=vim
+alias edd="${EDITOR}"
+
+# Shell config
+export RCNAME=bash_profile
+export RCPATH="${HOME}/.${RCNAME}"
+alias edrc="${EDITOR} ${RCPATH} && source ${RCPATH}"
+alias edcrc="${EDITOR} ${HOME}/conf/${RCNAME} && source ${RCPATH}"
+alias rebash='source ${RCPATH}'
+
 # Shell utils
 alias df='df -h'
 alias l='ls -lhF'
 alias la='ls -alhF'
 function md() {
-  mkdir -p $1 && cd $1
-}
-function qpopd() {
-  popd "$@" >/dev/null
-}
-function qpushd() {
-  pushd "$@" >/dev/null
+  mkdir -p ${1} && cd ${1}
 }
 function witch() {
-  if which -s $1; then ls -lhF $(which $1); fi
+  if which -s ${1}; then ls -lhF $(which ${1}); fi
 }
 
-# Editing
-export EDITOR=vim
-alias edd="$EDITOR"
-alias edrc="$EDITOR ~/.bash_profile && . ~/.bash_profile"
-alias edcrc="$EDITOR ~/conf/bash_profile && . ~/.bash_profile"
-alias rebash='. ~/.bash_profile'
-
 # Homebrew (should be first)
-if [[ -d "$HOME/homebrew" ]]; then
-  PATH="$HOME/homebrew/bin:$PATH"
+if [[ -d "${HOME}/homebrew" ]]; then
+  PATH="${HOME}/homebrew/bin:${PATH}"
 else
-  PATH="/usr/local/sbin:/usr/local/bin:$PATH"
+  PATH="/usr/local/sbin:/usr/local/bin:${PATH}"
 fi
 if which -s brew; then
   alias bh='brew home'
@@ -49,7 +47,7 @@ if which -s brew; then
   alias br='brew remove'
   alias bs='brew search'
   function buu() {
-    brew update && brew outdated && brew upgrade && brew cleanup
+    brew update && brew upgrade && brew cleanup && brew cask outdated
   }
   if [[ -f $(brew --prefix)/etc/bash_completion ]]; then
     . $(brew --prefix)/etc/bash_completion
@@ -82,7 +80,7 @@ fi
 if which -s bazel; then
   alias blaze='bazel'
   if complete -p bazel >/dev/null 2>&1; then
-    BLAZE_COMP=$(complete -p bazel | sed 's/bazel$/blaze/g') && $BLAZE_COMP
+    BLAZE_COMP=$(complete -p bazel | sed 's/bazel$/blaze/g') && ${BLAZE_COMP}
   fi
 fi
 
@@ -90,7 +88,7 @@ fi
 if which -s git; then
   alias g='git'
   if complete -p git >/dev/null 2>&1; then
-    G_COMP=$(complete -p git | sed 's/git$/g/g') && $G_COMP
+    G_COMP=$(complete -p git | sed 's/git$/g/g') && ${G_COMP}
   fi
 fi
 
@@ -100,7 +98,7 @@ if which -s rbenv; then
 fi
 
 # Go
-PATH="$PATH:$HOME/homebrew/opt/go/libexec/bin:$HOME/go/bin"
+PATH="$PATH:${HOME}/homebrew/opt/go/libexec/bin:${HOME}/go/bin"
 
 # Scala
 if which -s scala; then export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'; fi
@@ -119,11 +117,11 @@ function utd() {
     echo '********'
     local oldrubies=/Users/pdbartlett/.rubies.old
     local newrubies=/Users/pdbartlett/.rubies.new
-    rbenv install --list | grep '^\s*[0-9]' >$newrubies
-    if [[ -f $oldrubies ]]; then
-      diff -s $oldrubies $newrubies;
+    rbenv install --list | grep '^\s*[0-9]' >${newrubies}
+    if [[ -f ${oldrubies} ]]; then
+      diff -s ${oldrubies} ${newrubies};
     fi
-    mv -f $newrubies $oldrubies
+    mv -f ${newrubies} ${oldrubies}
     echo 'Installed:'
     rbenv versions
   fi
