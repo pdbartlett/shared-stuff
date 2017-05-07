@@ -106,15 +106,15 @@ if which -s scala; then export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'; fi
 # Utilities
 function utd() {
   if which -s brew; then
-    echo '***********'
-    echo '** Homebrew'
-    echo '***********'
+    echo '************'
+    echo '* Homebrew *'
+    echo '************'
     buu
   fi
   if which -s rbenv; then
-    echo '********'
-    echo '** rbenv'
-    echo '********'
+    echo '*********'
+    echo '* rbenv *'
+    echo '*********'
     local oldrubies=/Users/pdbartlett/.rubies.old
     local newrubies=/Users/pdbartlett/.rubies.new
     rbenv install --list | grep '^\s*[0-9]' >${newrubies}
