@@ -1,4 +1,5 @@
 # .bash_profile extract for common setup.
+# vim: syn=sh
 
 # Get aliases to a known, clean state before we start
 unalias -a
@@ -35,23 +36,9 @@ function witch() {
   if which -s ${1}; then ls -lhF $(which ${1}); fi
 }
 
-# Homebrew (should be first)
-if [[ -d "${HOME}/homebrew" ]]; then
-  PATH="${HOME}/homebrew/bin:${PATH}"
-else
-  PATH="/usr/local/sbin:/usr/local/bin:${PATH}"
-fi
-if which -s brew; then
-  alias bh='brew home'
-  alias bi='brew install'
-  alias br='brew remove'
-  alias bs='brew search'
-  function buu() {
-    brew update && brew upgrade && brew cleanup && brew cask outdated
-  }
-  if [[ -f $(brew --prefix)/etc/bash_completion ]]; then
-    . $(brew --prefix)/etc/bash_completion
-  fi
+# "Alternatives"
+if which -s exa; then
+  alias ls='exa'
 fi
 
 # ABC
@@ -92,13 +79,35 @@ if which -s git; then
   fi
 fi
 
+# Go
+PATH="$PATH:${HOME}/homebrew/opt/go/libexec/bin:${HOME}/go/bin"
+
+# Homebrew
+if [[ -d "${HOME}/homebrew" ]]; then
+  PATH="${HOME}/homebrew/bin:${PATH}"
+else
+  PATH="/usr/local/sbin:/usr/local/bin:${PATH}"
+fi
+if which -s brew; then
+  alias bh='brew home'
+  alias bi='brew install'
+  alias br='brew remove'
+  alias bs='brew search'
+  function buu() {
+    brew update && brew upgrade && brew cleanup && brew cask outdated
+  }
+  if [[ -f $(brew --prefix)/etc/bash_completion ]]; then
+    . $(brew --prefix)/etc/bash_completion
+  fi
+fi
+
+# iterm2 shell integration
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+
 # Rbenv
 if which -s rbenv; then
   eval "$(rbenv init -)"
 fi
-
-# Go
-PATH="$PATH:${HOME}/homebrew/opt/go/libexec/bin:${HOME}/go/bin"
 
 # Scala
 if which -s scala; then export SBT_OPTS='-XX:MaxPermSize=128M -Xmx8192M'; fi
@@ -126,9 +135,6 @@ function utd() {
     rbenv versions
   fi
 }
-
-# iterm2 shell integration
-test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
 # Tidy up path
 PATH=$(printf "%s" "${PATH}" | /usr/bin/awk -v RS=: -v ORS=: '!($0 in a) {a[$0]; print}')
