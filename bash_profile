@@ -27,8 +27,6 @@ alias rebash='source ${RCPATH}'
 
 # Shell utils
 alias df='df -h'
-alias l='ls -lhF'
-alias la='ls -alhF'
 function md() {
   mkdir -p ${1} && cd ${1}
 }
@@ -36,9 +34,33 @@ function witch() {
   if which -s ${1}; then ls -lhF $(which ${1}); fi
 }
 
+# Homebrew (first, so installed tools are visible)
+if [[ -d "${HOME}/homebrew" ]]; then
+  PATH="${HOME}/homebrew/bin:${PATH}"
+else
+  PATH="/usr/local/sbin:/usr/local/bin:${PATH}"
+fi
+if which -s brew; then
+  alias bh='brew home'
+  alias bi='brew install'
+  alias br='brew remove'
+  alias bs='brew search'
+  function buu() {
+    brew update && brew upgrade && brew cleanup && brew cask outdated
+  }
+  if [[ -f $(brew --prefix)/etc/bash_completion ]]; then
+    . $(brew --prefix)/etc/bash_completion
+  fi
+fi
+
 # "Alternatives"
 if which -s exa; then
+  alias l='exa -l --git --colour-scale'
+  alias la='exa -al --git --colour-scale'
   alias ls='exa'
+else
+  alias l="ls -lhF"
+  alias la="ls -alhF"
 fi
 
 # ABC
@@ -82,25 +104,6 @@ fi
 # Go
 PATH="$PATH:${HOME}/homebrew/opt/go/libexec/bin:${HOME}/go/bin"
 
-# Homebrew
-if [[ -d "${HOME}/homebrew" ]]; then
-  PATH="${HOME}/homebrew/bin:${PATH}"
-else
-  PATH="/usr/local/sbin:/usr/local/bin:${PATH}"
-fi
-if which -s brew; then
-  alias bh='brew home'
-  alias bi='brew install'
-  alias br='brew remove'
-  alias bs='brew search'
-  function buu() {
-    brew update && brew upgrade && brew cleanup && brew cask outdated
-  }
-  if [[ -f $(brew --prefix)/etc/bash_completion ]]; then
-    . $(brew --prefix)/etc/bash_completion
-  fi
-fi
-
 # iterm2 shell integration
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
@@ -137,4 +140,5 @@ function utd() {
 }
 
 # Tidy up path
+PATH="${PATH}:${HOME}/bin"
 PATH=$(printf "%s" "${PATH}" | /usr/bin/awk -v RS=: -v ORS=: '!($0 in a) {a[$0]; print}')
